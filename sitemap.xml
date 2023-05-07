@@ -26,5 +26,9 @@
     <loc>https://dododo.eu.org/book.pdf</loc>
     <priority>1.00</priority>
   </url>
+  <url>
+    <loc>https://dododo.eu.org/p/1</loc>
+    <priority>1.00</priority>
+  </url>
 
 </urlset>
