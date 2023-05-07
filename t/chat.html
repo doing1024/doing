@@ -1,134 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>ChatGPT Mirror</title>
+  <meta charset="UTF-8">
+  <title>限制页面</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    #left-container {
+      width: 20%;
+      height: 100vh;
+      border-right: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #right-container {
+      width: 80%;
+      height: 100vh;
+    }
+
+    .link {
+      width: 100%;
+      height: 50px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f2f2f2;
+      cursor: pointer;
+    }
+
+    .link:hover {
+      background-color: #ddd;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
 </head>
 <body>
-    <div id="chat-container">
-        <div id="chat-output"></div>
-        <div id="chat-input">
-            <input type="text" id="user-input" placeholder="Type your message here..." />
-            <button id="send-btn">Send</button>
-        </div>
-    </div>
+  <div id="left-container">
+    <div class="link" data-url="https://chat.wuguokai.cn">https://chat.wuguokai.cn</div>
+    <div class="link" data-url="https://chat.aidutu.cn">https://chat.aidutu.cn</div>
+    <div class="link" data-url="https://wet.xeasy.me">https://wet.xeasy.me</div>
+    <div class="link" data-url="https://chat.binjie.site">https://chat.binjie.site</div>
+    <div class="link" data-url="https://chat.extkj.cn">https://chat.extkj.cn</div>
+  </div>
+  <div id="right-container">
+    <iframe id="iframe" src=""></iframe>
+  </div>
+  <script>
+    const links = document.querySelectorAll('.link');
+    const iframe = document.querySelector('#iframe');
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        const chatContainer = document.getElementById("chat-container");
-        const chatOutput = document.getElementById("chat-output");
-        const userInput = document.getElementById("user-input");
-        const sendBtn = document.getElementById("send-btn");
+    function showPage(url) {
+      iframe.src = url;
+    }
 
-        const apiEndpoint = "https://api.openai.com/v1/engines/text-davinci-002/completions";
-        const apiKey = ""; // Add your API Key here
-
-        sendBtn.addEventListener("click", () => {
-            const message = userInput.value;
-            if (message.trim() === "") return;
-
-            axios.post(apiEndpoint, {
-                prompt: message,
-                max_tokens: 64,
-                temperature: 0.5
-            }, {
-                headers: {
-                    "Authorization": `Bearer ${apiKey}`,
-                    "Content-Type": "application/json"
-                }
-            })
-            .then(res => {
-                const botMessage = res.data.choices[0].text.trim();
-                addChatMessage(message, botMessage);
-            })
-            .catch(err => console.error(err));
-
-            userInput.value = "";
-        });
-
-        function addChatMessage(userMessage, botMessage) {
-            const chatBubble = document.createElement("div");
-            chatBubble.classList.add("chat-bubble");
-
-            const userBubble = document.createElement("div");
-            userBubble.classList.add("user-bubble");
-            userBubble.innerText = userMessage;
-
-            const botBubble = document.createElement("div");
-            botBubble.classList.add("bot-bubble");
-            botBubble.innerText = botMessage;
-
-            chatBubble.appendChild(userBubble);
-            chatBubble.appendChild(botBubble);
-
-            chatOutput.appendChild(chatBubble);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-        }
-    </script>
-
-    <style>
-        #chat-container {
-            height: 600px;
-            width: 400px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            overflow: auto;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-        }
-
-        #chat-output {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .chat-bubble {
-            display: flex;
-            margin: 10px 0px;
-        }
-
-        .user-bubble {
-            background-color: #f2f2f2;
-            color: #555;
-            padding: 10px;
-            border-radius: 10px;
-            margin-right: 10px;
-            align-self: flex-start;
-            max-width: 70%;
-        }
-
-        .bot-bubble {
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            margin-left: 10px;
-            align-self: flex-end;
-            max-width: 70%;
-        }
-
-        #chat-input {
-            display: flex;
-            margin-top: 10px;
-        }
-
-        #user-input {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            margin-right: 10px;
-        }
-
-        #send-btn {
-            padding: 10px;
-            border: none;
-            border-radius: 5px;
-            background-color: #007bff;
-            color: #fff;
-            cursor: pointer;
-        }
-    </style>
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        const url = link.getAttribute('data-url');
+        showPage(url);
+      });
+    });
+  </script>
 </body>
 </html>
