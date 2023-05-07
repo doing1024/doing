@@ -1,31 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>chatgpt镜像</title>
+    <title>ChatGPT Mirror</title>
 </head>
 <body>
-    <iframe id="iframe"
-    name="iframe"
-    height="100%"
-    width="100%"
-    src="https://project-iprj64570451ecd7b40dc29f13b0-1024.preview.inscode.run/dist/index.html"
-    scrolling="auto"
-    frameborder="0"
-    onload="changeFrameHeight()">
-</iframe>
-<script>
-    function changeFrameHeight() {
-        var iframe = document.getElementById("iframe");
-        iframe.height = document.documentElement.clientHeight;
-    }
-    //onresize属性可以用来获取或设置当前窗口的resize事件的事件处理函数
-    //onresize事件会在窗口或框架被调整大小时发生
-    window.onresize = function() {
-        changeFrameHeight();
-    }
-</script>
+    <div id="chat-container">
+        <div id="chat-output"></div>
+        <div id="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message here..." />
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const chatContainer = document.getElementById("chat-container");
+        const chatOutput = document.getElementById("chat-output");
+        const userInput = document.getElementById("user-input");
+        const sendBtn = document.getElementById("send-btn");
+
+        const apiEndpoint = "https://api.openai.com/v1/engines/text-davinci-002/completions";
+        const apiKey = ""; // Add your API Key here
+
+        sendBtn.addEventListener("click", () => {
+            const message = userInput.value;
+            if (message.trim() === "") return;
+
+            axios.post(apiEndpoint, {
+                prompt: message,
+                max_tokens: 64,
+                temperature: 0.5
+            }, {
+                headers: {
+                    "Authorization": `Bearer ${apiKey}`,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(res => {
+                const botMessage = res.data.choices[0].text.trim();
+                addChatMessage(message, botMessage);
+            })
+            .catch(err => console.error(err));
+
+            userInput.value = "";
+        });
+
+        function addChatMessage(userMessage, botMessage) {
+            const chatBubble = document.createElement("div");
+            chatBubble.classList.add("chat-bubble");
+
+            const userBubble = document.createElement("div");
+            userBubble.classList.add("user-bubble");
+            userBubble.innerText = userMessage;
+
+            const botBubble = document.createElement("div");
+            botBubble.classList.add("bot-bubble");
+            botBubble.innerText = botMessage;
+
+            chatBubble.appendChild(userBubble);
+            chatBubble.appendChild(botBubble);
+
+            chatOutput.appendChild(chatBubble);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+
+    <style>
+        #chat-container {
+            height: 600px;
+            width: 400px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: auto;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+        }
+
+        #chat-output {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-bubble {
+            display: flex;
+            margin: 10px 0px;
+        }
+
+        .user-bubble {
+            background-color: #f2f2f2;
+            color: #555;
+            padding: 10px;
+            border-radius: 10px;
+            margin-right: 10px;
+            align-self: flex-start;
+            max-width: 70%;
+        }
+
+        .bot-bubble {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            margin-left: 10px;
+            align-self: flex-end;
+            max-width: 70%;
+        }
+
+        #chat-input {
+            display: flex;
+            margin-top: 10px;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #send-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
 </body>
 </html>
