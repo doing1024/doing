@@ -71,3 +71,6 @@ pre {
 code {
 	font-family: 'Courier New', Courier, monospace;
 }
+html[theme='dark-mode'] {
+	filter: invert(1) hue-rotate(180deg);
+  }
