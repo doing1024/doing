@@ -140,16 +140,4 @@ body {
     height: 100px;
     width: 100px;
   }
-  .supTopNum {
-    font-size:17px;
-    color: #fff;
-    height: 29px;
-    width: 132px;
-    position: absolute;
-    right:87%;
-    top: -6px;
-    text-align: center;
-    line-height: 37px;
-    background-color: #ee7f0c;
-    transform: rotate(-45deg);
-}
+  
